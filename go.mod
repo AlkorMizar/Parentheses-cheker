@@ -1,3 +1,3 @@
-module github.com/AlkorMizar/Parentheses-cheker.git
+module github.com/AlkorMizar/Parentheses-cheker
 
 go 1.17
