@@ -22,10 +22,11 @@ func (s *stack) Push(v rune) {
 func (s *stack) Pop() (rune, error) {
 	l := len(s.s)
 	if l == 0 {
-		return 0, errors.New("Empty Stack")
+		return 0, errors.New("empty stack")
 	}
 
 	res := s.s[l-1]
 	s.s = s.s[:l-1]
+
 	return res, nil
 }

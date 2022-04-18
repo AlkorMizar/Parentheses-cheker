@@ -8,9 +8,9 @@ const openBrace rune = ' '
 
 func Check(input string) bool {
 	bracesMap := map[rune]rune{
-		rune('('): rune(openBrace),
-		rune('['): rune(openBrace),
-		rune('{'): rune(openBrace),
+		rune('('): openBrace,
+		rune('['): openBrace,
+		rune('{'): openBrace,
 		rune(')'): rune('('),
 		rune(']'): rune('['),
 		rune('}'): rune('{'),
