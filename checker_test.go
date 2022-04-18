@@ -32,7 +32,7 @@ func TestCheck(t *testing.T) {
 			output: false,
 		},
 		"with other symbols": {
-			input:  "((1 + 2) * 3) - 4)/5+[dasd]-{a(asd)}",
+			input:  "(((1 + 2) * 3) - 4)/5+[dasd]-{a(asd)}",
 			output: true,
 		},
 	}
