@@ -4,6 +4,11 @@ import (
 	"github.com/AlkorMizar/Parentheses-cheker/structs"
 )
 
+type Stack interface {
+	Push(v rune)
+	Pop() (rune, error)
+}
+
 const openBrace rune = ' '
 
 func Check(input string) bool {
@@ -16,7 +21,7 @@ func Check(input string) bool {
 		rune('}'): rune('{'),
 	}
 
-	stack := structs.NewStack()
+	var stack Stack = structs.NewStack()
 
 	for _, inpSymb := range input {
 		if mapSymb, ok := bracesMap[inpSymb]; ok {

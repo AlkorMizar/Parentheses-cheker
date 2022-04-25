@@ -2,24 +2,19 @@ package structs
 
 import "errors"
 
-type Stack interface {
-	Push(v rune)
-	Pop() (rune, error)
-}
-
-type stack struct {
+type Stack struct {
 	s []rune
 }
 
-func NewStack() Stack {
-	return &stack{make([]rune, 0)}
+func NewStack() *Stack {
+	return &Stack{make([]rune, 0)}
 }
 
-func (s *stack) Push(v rune) {
+func (s *Stack) Push(v rune) {
 	s.s = append(s.s, v)
 }
 
-func (s *stack) Pop() (rune, error) {
+func (s *Stack) Pop() (rune, error) {
 	l := len(s.s)
 	if l == 0 {
 		return 0, errors.New("empty stack")
