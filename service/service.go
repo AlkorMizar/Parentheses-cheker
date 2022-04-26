@@ -2,8 +2,10 @@ package service
 
 import (
 	"log"
+	"math/rand"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -62,5 +64,15 @@ func GenrateHandler(w http.ResponseWriter, r *http.Request) {
 
 // business logic that generates strings with braces
 func generate(leng int) string {
-	return ""
+	var builder strings.Builder
+
+	braces := []rune{'(', ')', '{', '}', '[', ']'}
+	amount := len(braces)
+
+	for leng > 0 {
+		builder.WriteRune(braces[rand.Int31n(int32(amount))])
+		leng--
+	}
+
+	return builder.String()
 }

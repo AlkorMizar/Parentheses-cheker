@@ -3,6 +3,7 @@ package service_test
 import (
 	"net/http"
 	"net/http/httptest"
+	"regexp"
 	"testing"
 
 	"github.com/AlkorMizar/Parentheses-cheker/service"
@@ -98,8 +99,9 @@ func TestServiceResult(t *testing.T) {
 			}
 
 			got := response.Body.String()
+			re := regexp.MustCompile("[^(){}\\[\\]]+")
 
-			if len(got) != tc.resp.respResLenght {
+			if len(got) != tc.resp.respResLenght || re.FindString(got) != "" {
 				t.Errorf("got %s, want len %d", got, tc.resp.respResLenght)
 			}
 		})
