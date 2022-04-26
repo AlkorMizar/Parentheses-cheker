@@ -36,8 +36,6 @@ linters:
     - gomoddirectives
     - gomodguard
     - gocyclo
-    - gosec
-    - gosimple
     - govet
     - ineffassign
     - misspell
