@@ -70,7 +70,7 @@ func generate(leng int) string {
 	amount := len(braces)
 
 	for leng > 0 {
-		builder.WriteRune(braces[rand.Int31n(int32(amount))])
+		builder.WriteRune(braces[rand.Int31n(int32(amount))]) //nolint:gosec // this is used to simplify programm
 		leng--
 	}
 

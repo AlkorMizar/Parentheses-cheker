@@ -99,8 +99,7 @@ func TestServiceResult(t *testing.T) {
 			}
 
 			got := response.Body.String()
-			re := regexp.MustCompile("[^(){}\\[\\]]+")
-
+			re := regexp.MustCompile("[^(){}\\[\\]]+") //nolint:gosimple // this is the only way to create RegEx
 			if len(got) != tc.resp.respResLenght || re.FindString(got) != "" {
 				t.Errorf("got %s, want len %d", got, tc.resp.respResLenght)
 			}

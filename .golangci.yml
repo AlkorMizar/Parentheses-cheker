@@ -55,6 +55,8 @@ linters:
     - varcheck
     - whitespace
     - wsl
+    - gosec
+    - gosimple
 
 run:
   issues-exit-code: 1
