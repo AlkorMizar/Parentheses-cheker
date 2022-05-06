@@ -18,11 +18,25 @@ const (
 	idleTimeout  = 120
 )
 
+type businessL func(leng int) string
+
+type Handlers struct {
+	businessLogic businessL
+}
+
+func NewHandlers(funct businessL) *Handlers {
+	return &Handlers{
+		businessLogic: funct,
+	}
+}
+
 // function called to load server
-func LoadService() {
+func LoadService() error {
 	mux := http.NewServeMux()
 
-	mux.HandleFunc(ServiceRoute, GenrateHandler)
+	h := NewHandlers(Generate)
+
+	mux.Handle(ServiceRoute, h)
 
 	s := http.Server{
 		Addr:         ":8080",
@@ -35,14 +49,14 @@ func LoadService() {
 	err := s.ListenAndServe()
 
 	if err != nil {
-		if err != http.ErrServerClosed {
-			panic(err)
-		}
+		return err
 	}
+
+	return nil
 }
 
 // function that handles request
-func GenrateHandler(w http.ResponseWriter, r *http.Request) {
+func (h *Handlers) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		w.WriteHeader(http.StatusNotImplemented)
 		return
@@ -51,19 +65,20 @@ func GenrateHandler(w http.ResponseWriter, r *http.Request) {
 	n, err := strconv.Atoi(r.URL.Query().Get("n"))
 
 	if err != nil || n < 0 {
-		w.WriteHeader(http.StatusNotAcceptable)
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	_, err = w.Write([]byte(generate(n)))
+	_, err = w.Write([]byte(h.businessLogic(n)))
 
 	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
 		log.Print(err)
 	}
 }
 
 // business logic that generates strings with braces
-func generate(leng int) string {
+func Generate(leng int) string {
 	var builder strings.Builder
 
 	braces := []rune{'(', ')', '{', '}', '[', ']'}
