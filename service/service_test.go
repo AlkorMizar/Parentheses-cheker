@@ -41,7 +41,7 @@ func TestServiceResult(t *testing.T) {
 				url:        requestWithParams + "-10",
 			},
 			resp: respForTest{
-				respAns:       http.StatusNotAcceptable,
+				respAns:       http.StatusBadRequest,
 				respResLenght: 0,
 			},
 		},
@@ -51,7 +51,7 @@ func TestServiceResult(t *testing.T) {
 				url:        requestWithParams + "four",
 			},
 			resp: respForTest{
-				respAns:       http.StatusNotAcceptable,
+				respAns:       http.StatusBadRequest,
 				respResLenght: 0,
 			},
 		},
@@ -61,7 +61,7 @@ func TestServiceResult(t *testing.T) {
 				url:        requestWithParams,
 			},
 			resp: respForTest{
-				respAns:       http.StatusNotAcceptable,
+				respAns:       http.StatusBadRequest,
 				respResLenght: 0,
 			},
 		},
@@ -71,7 +71,7 @@ func TestServiceResult(t *testing.T) {
 				url:        service.ServiceRoute,
 			},
 			resp: respForTest{
-				respAns:       http.StatusNotAcceptable,
+				respAns:       http.StatusBadRequest,
 				respResLenght: 0,
 			},
 		},
@@ -92,16 +92,49 @@ func TestServiceResult(t *testing.T) {
 			request, _ := http.NewRequest(tc.request.methodType, tc.request.url, http.NoBody)
 			response := httptest.NewRecorder()
 
-			service.GenrateHandler(response, request)
+			h := service.NewHandlers(mock)
+			h.ServeHTTP(response, request)
 
 			if response.Code != tc.resp.respAns {
 				t.Errorf("got %d, want %d", response.Code, tc.resp.respAns)
 			}
+		})
+	}
+}
 
-			got := response.Body.String()
+func mock(leng int) string {
+	return "()[]{}"
+}
+
+func TestGenerateResult(t *testing.T) {
+	tests := map[string]struct {
+		lenIn  int
+		lenOut int
+	}{
+		"correct length": {
+			lenIn:  8,
+			lenOut: 8,
+		},
+		"odd lengrh": {
+			lenIn:  7,
+			lenOut: 7,
+		},
+		"big length": {
+			lenIn:  100,
+			lenOut: 100,
+		},
+		"zero": {
+			lenIn:  0,
+			lenOut: 0,
+		},
+	}
+
+	for name, tc := range tests {
+		t.Run(name, func(t *testing.T) {
+			got := service.Generate(tc.lenIn)
 			re := regexp.MustCompile("[^(){}\\[\\]]+") //nolint:gosimple // this is the only way to create RegEx
-			if len(got) != tc.resp.respResLenght || re.FindString(got) != "" {
-				t.Errorf("got %s, want len %d", got, tc.resp.respResLenght)
+			if len(got) != tc.lenOut || re.FindString(got) != "" {
+				t.Errorf("got %s, want len %d", got, tc.lenOut)
 			}
 		})
 	}
