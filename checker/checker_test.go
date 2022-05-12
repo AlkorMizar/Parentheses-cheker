@@ -3,7 +3,7 @@ package checker_test
 import (
 	"testing"
 
-	checker "github.com/AlkorMizar/Parentheses-cheker"
+	checker "github.com/AlkorMizar/Parentheses-cheker/checker"
 )
 
 func TestCheck(t *testing.T) {
