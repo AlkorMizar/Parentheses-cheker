@@ -9,10 +9,16 @@ import (
 )
 
 func CalculateFor(url string, cycles int) (float64, error) {
+	return Calculate(getAllStr(url, cycles))
+}
+
+func getAllStr(url string, cycles int) (res []string) {
+
+	res = make([]string, cycles)
+
 	client := http.Client{}
-	all := 0.0
-	checked := 0.0
-	for ; cycles > 0; cycles-- {
+
+	for i := 0; cycles > 0; cycles-- {
 		resp, err := client.Get(url)
 		if err != nil {
 			continue
@@ -21,7 +27,17 @@ func CalculateFor(url string, cycles int) (float64, error) {
 		if err != nil {
 			continue
 		}
-		if checker.Check(string(body)) {
+		res[i] = string(body)
+		i++
+	}
+	return res
+}
+
+func Calculate(inp []string) (float64, error) {
+	all := 0.0
+	checked := 0.0
+	for _, v := range inp {
+		if checker.Check(v) {
 			checked++
 		}
 		all++
