@@ -35,6 +35,10 @@ func TestCheck(t *testing.T) {
 			input:  "(((1 + 2) * 3) - 4)/5+[dasd]-{a(asd)}",
 			output: true,
 		},
+		"tricky": {
+			input:  "{(){}",
+			output: false,
+		},
 	}
 
 	for name, tc := range tests {
