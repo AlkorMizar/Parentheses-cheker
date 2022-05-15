@@ -1,12 +1,11 @@
-package service_test
+package handlers_test
 
 import (
 	"net/http"
 	"net/http/httptest"
-	"regexp"
 	"testing"
 
-	"github.com/AlkorMizar/Parentheses-cheker/service"
+	"github.com/AlkorMizar/Parentheses-cheker/internal/handlers"
 )
 
 type respForTest struct {
@@ -18,8 +17,10 @@ type reqForTest struct {
 	url        string
 }
 
+const ServiceRoute = "/"
+
 func TestServiceResult(t *testing.T) {
-	var requestWithParams = service.ServiceRoute + "?n="
+	var requestWithParams = ServiceRoute + "?n="
 
 	tests := map[string]struct {
 		request reqForTest
@@ -68,7 +69,7 @@ func TestServiceResult(t *testing.T) {
 		"get request without name of parameter": {
 			request: reqForTest{
 				methodType: http.MethodGet,
-				url:        service.ServiceRoute,
+				url:        ServiceRoute,
 			},
 			resp: respForTest{
 				respAns:       http.StatusBadRequest,
@@ -92,7 +93,8 @@ func TestServiceResult(t *testing.T) {
 			request, _ := http.NewRequest(tc.request.methodType, tc.request.url, http.NoBody)
 			response := httptest.NewRecorder()
 
-			h := service.NewHandlers(mock)
+			m := &mock{}
+			h := handlers.NewHandlers(m)
 			h.ServeHTTP(response, request)
 
 			if response.Code != tc.resp.respAns {
@@ -102,40 +104,9 @@ func TestServiceResult(t *testing.T) {
 	}
 }
 
-func mock(leng int) string {
-	return "()[]{}"
+type mock struct {
 }
 
-func TestGenerateResult(t *testing.T) {
-	tests := map[string]struct {
-		lenIn  int
-		lenOut int
-	}{
-		"correct length": {
-			lenIn:  8,
-			lenOut: 8,
-		},
-		"odd lengrh": {
-			lenIn:  7,
-			lenOut: 7,
-		},
-		"big length": {
-			lenIn:  100,
-			lenOut: 100,
-		},
-		"zero": {
-			lenIn:  0,
-			lenOut: 0,
-		},
-	}
-
-	for name, tc := range tests {
-		t.Run(name, func(t *testing.T) {
-			got := service.Generate(tc.lenIn)
-			re := regexp.MustCompile("[^(){}\\[\\]]+") //nolint:gosimple // this is the only way to create RegEx
-			if len(got) != tc.lenOut || re.FindString(got) != "" {
-				t.Errorf("got %s, want len %d", got, tc.lenOut)
-			}
-		})
-	}
+func (m *mock) Generate(leng int) string {
+	return "()[]{}"
 }
