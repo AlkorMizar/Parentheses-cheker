@@ -10,6 +10,7 @@ import (
 
 // ServiceRoute valid path for request
 const ServiceRoute = "/generate"
+const Port = ":8080"
 
 const (
 	readTimeout  = 30
@@ -27,7 +28,7 @@ func LoadService() error {
 	mux.Handle(ServiceRoute, h)
 
 	s := http.Server{
-		Addr:         ":8080",
+		Addr:         Port,
 		ReadTimeout:  readTimeout * time.Second,
 		WriteTimeout: writeTimeout * time.Second,
 		IdleTimeout:  idleTimeout * time.Second,

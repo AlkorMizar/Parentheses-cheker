@@ -8,10 +8,10 @@ import (
 	"github.com/AlkorMizar/Parentheses-cheker/internal/checker"
 )
 
-func CalculateFor(url string, cycles int) (int, error) {
+func CalculateFor(url string, cycles int) (float64, error) {
 	client := http.Client{}
-	all := 0
-	checked := 0
+	all := 0.0
+	checked := 0.0
 	for ; cycles > 0; cycles-- {
 		resp, err := client.Get(url)
 		if err != nil {
@@ -27,7 +27,7 @@ func CalculateFor(url string, cycles int) (int, error) {
 		all++
 	}
 	if all == 0 {
-		return -1, errors.New("Service not working")
+		return -1, errors.New("service not working")
 	}
 	return checked / all, nil
 }
