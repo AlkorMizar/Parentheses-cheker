@@ -2,15 +2,16 @@ package service
 
 import (
 	"log"
-	"math/rand"
 	"net/http"
 	"strconv"
-	"strings"
 	"time"
+
+	"github.com/AlkorMizar/Parentheses-cheker/service/usecases"
 )
 
 // ServiceRoute valid path for request
 const ServiceRoute = "/generate"
+const Port = ":8080"
 
 const (
 	readTimeout  = 30
@@ -18,15 +19,17 @@ const (
 	idleTimeout  = 120
 )
 
-type businessL func(leng int) string
-
-type Handlers struct {
-	businessLogic businessL
+type braces interface {
+	Generate(int) string
 }
 
-func NewHandlers(funct businessL) *Handlers {
+type Handlers struct {
+	bracesLogic braces
+}
+
+func NewHandlers(brL braces) *Handlers {
 	return &Handlers{
-		businessLogic: funct,
+		bracesLogic: brL,
 	}
 }
 
@@ -34,7 +37,8 @@ func NewHandlers(funct businessL) *Handlers {
 func LoadService() error {
 	mux := http.NewServeMux()
 
-	h := NewHandlers(Generate)
+	logic := usecases.NewBraces()
+	h := NewHandlers(logic)
 
 	mux.Handle(ServiceRoute, h)
 
@@ -69,25 +73,10 @@ func (h *Handlers) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err = w.Write([]byte(h.businessLogic(n)))
+	_, err = w.Write([]byte(h.bracesLogic.Generate(n)))
 
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		log.Print(err)
 	}
-}
-
-// business logic that generates strings with braces
-func Generate(leng int) string {
-	var builder strings.Builder
-
-	braces := []rune{'(', ')', '{', '}', '[', ']'}
-	amount := len(braces)
-
-	for leng > 0 {
-		builder.WriteRune(braces[rand.Int31n(int32(amount))]) //nolint:gosec // this is used to simplify programm
-		leng--
-	}
-
-	return builder.String()
 }

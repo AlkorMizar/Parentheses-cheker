@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/AlkorMizar/Parentheses-cheker/service"
+	"github.com/AlkorMizar/Parentheses-cheker/service/usecases"
 )
 
 type respForTest struct {
@@ -92,7 +93,8 @@ func TestServiceResult(t *testing.T) {
 			request, _ := http.NewRequest(tc.request.methodType, tc.request.url, http.NoBody)
 			response := httptest.NewRecorder()
 
-			h := service.NewHandlers(mock)
+			m := &mock{}
+			h := service.NewHandlers(m)
 			h.ServeHTTP(response, request)
 
 			if response.Code != tc.resp.respAns {
@@ -102,7 +104,10 @@ func TestServiceResult(t *testing.T) {
 	}
 }
 
-func mock(leng int) string {
+type mock struct {
+}
+
+func (m *mock) Generate(leng int) string {
 	return "()[]{}"
 }
 
@@ -130,8 +135,9 @@ func TestGenerateResult(t *testing.T) {
 	}
 
 	for name, tc := range tests {
+		generator := usecases.NewBraces()
 		t.Run(name, func(t *testing.T) {
-			got := service.Generate(tc.lenIn)
+			got := generator.Generate(tc.lenIn)
 			re := regexp.MustCompile("[^(){}\\[\\]]+") //nolint:gosimple // this is the only way to create RegEx
 			if len(got) != tc.lenOut || re.FindString(got) != "" {
 				t.Errorf("got %s, want len %d", got, tc.lenOut)
