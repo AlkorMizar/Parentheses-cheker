@@ -3,7 +3,7 @@ package checker_test
 import (
 	"testing"
 
-	checker "github.com/AlkorMizar/Parentheses-cheker/checker"
+	checker "github.com/AlkorMizar/Parentheses-cheker/internal/checker"
 )
 
 func TestCheck(t *testing.T) {
@@ -34,6 +34,10 @@ func TestCheck(t *testing.T) {
 		"with other symbols": {
 			input:  "(((1 + 2) * 3) - 4)/5+[dasd]-{a(asd)}",
 			output: true,
+		},
+		"tricky": {
+			input:  "{(){}",
+			output: false,
 		},
 	}
 

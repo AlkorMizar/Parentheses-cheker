@@ -1,7 +1,7 @@
 package checker
 
 import (
-	"github.com/AlkorMizar/Parentheses-cheker/structs"
+	"github.com/AlkorMizar/Parentheses-cheker/internal/structs"
 )
 
 type Stack interface {
@@ -33,5 +33,6 @@ func Check(input string) bool {
 		}
 	}
 
-	return true
+	_, err := stack.Pop()
+	return err != nil
 }
