@@ -10,4 +10,4 @@ Has a parentheses web <i>service</i> that generates a random sequence of parenth
 ```
 GET /generate?n={length}
 ```
-<i>Cervice</i>  can call the service N = 1000 times for each of the strings of the length 2,4,8 and calculate the percent of balanced strings for each length and print the results to stdout.
+<i>Client</i>  can call the service N = 1000 times for each of the strings of the length 2,4,8 and calculate the percent of balanced strings for each length and print the results to stdout.
