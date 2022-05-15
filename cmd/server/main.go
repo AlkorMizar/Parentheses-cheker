@@ -3,11 +3,11 @@ package main
 import (
 	"fmt"
 
-	"github.com/AlkorMizar/Parentheses-cheker/service"
+	"github.com/AlkorMizar/Parentheses-cheker/pkg/services"
 )
 
 func main() {
-	err := service.LoadService()
+	err := services.LoadService()
 	if err != nil {
 		fmt.Print(err)
 	}
