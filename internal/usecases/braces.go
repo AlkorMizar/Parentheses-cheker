@@ -5,14 +5,14 @@ import (
 	"strings"
 )
 
-type braces struct{}
+type Braces struct{}
 
-func NewBraces() *braces {
-	return &braces{}
+func NewBraces() *Braces {
+	return &Braces{}
 }
 
 // business logic that generates strings with braces
-func (b *braces) Generate(leng int) string {
+func (b *Braces) Generate(leng int) string {
 	var builder strings.Builder
 
 	braces := []rune{'(', ')', '{', '}', '[', ']'}

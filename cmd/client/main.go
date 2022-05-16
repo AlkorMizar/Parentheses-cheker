@@ -21,6 +21,8 @@ func main() {
 			continue
 		}
 
-		fmt.Printf("for length %d percentage = %.0f\n", l, res*100)
+		res *= 100.0
+
+		fmt.Printf("for length %d percentage = %.0f\n", l, res)
 	}
 }

@@ -34,5 +34,6 @@ func Check(input string) bool {
 	}
 
 	_, err := stack.Pop()
+
 	return err != nil
 }
