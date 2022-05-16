@@ -136,9 +136,11 @@ func TestGenerateResult(t *testing.T) {
 
 	for name, tc := range tests {
 		generator := usecases.NewBraces()
+
 		t.Run(name, func(t *testing.T) {
 			got := generator.Generate(tc.lenIn)
 			re := regexp.MustCompile("[^(){}\\[\\]]+") //nolint:gosimple // this is the only way to create RegEx
+
 			if len(got) != tc.lenOut || re.FindString(got) != "" {
 				t.Errorf("got %s, want len %d", got, tc.lenOut)
 			}
