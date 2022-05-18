@@ -11,7 +11,7 @@ import (
 const N = 1000
 
 var strLens = [...]int{2, 4, 8}
-var url = "http://localhost" + services.Port + services.ServiceRoute + "?n="
+var url = "http://localhost" + services.Port + services.Route + "?n="
 
 func main() {
 	for _, l := range strLens {

@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	err := services.LoadService()
+	err := services.Run()
 	if err != nil {
 		fmt.Print(err)
 	}

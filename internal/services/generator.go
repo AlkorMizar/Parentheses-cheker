@@ -8,8 +8,8 @@ import (
 	"github.com/AlkorMizar/Parentheses-cheker/internal/usecases"
 )
 
-// ServiceRoute valid path for request
-const ServiceRoute = "/generate"
+// Route valid path for request
+const Route = "/generate"
 const Port = ":8080"
 
 const (
@@ -19,13 +19,13 @@ const (
 )
 
 // function called to load server
-func LoadService() error {
+func Run() error {
 	mux := http.NewServeMux()
 
 	logic := usecases.NewBraces()
 	h := handlers.NewHandlers(logic)
 
-	mux.Handle(ServiceRoute, h)
+	mux.Handle(Route, h)
 
 	s := http.Server{
 		Addr:         Port,
