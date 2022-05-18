@@ -31,16 +31,22 @@ func getAllStr(url string, cycles int) (res []string) {
 func getBody(cl http.Client, url string) (string, error) {
 	resp, err := cl.Get(url)
 
-	if err == nil {
-		body, err := io.ReadAll(resp.Body) //nolint:govet // this way easier to returne error from function
-		defer resp.Body.Close()
-
-		if err == nil {
-			return string(body), nil
-		}
+	if err != nil {
+		return "", err
 	}
 
-	return "", err
+	if resp.StatusCode != http.StatusAccepted {
+		return "", err
+	}
+
+	body, errBody := io.ReadAll(resp.Body)
+	defer resp.Body.Close()
+
+	if errBody != nil {
+		return "", err
+	}
+
+	return string(body), nil
 }
 
 func Calculate(inp []string) (float64, error) {
