@@ -1,9 +1,11 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
+	"os"
 	"strconv"
 	"sync"
 
@@ -22,7 +24,13 @@ func main() {
 	}
 
 	url := cfg.Address + cfg.Port + cfg.Route + "?n="
-	brClient := client.NewClient(GetAllStrSync, 0)
+
+	var brClient *client.Client
+	if os.Args[1] == "sync" {
+		brClient = client.NewClient(fetchAllStrSync, 0)
+	} else {
+		brClient = client.NewClient(fetchAllStrAsync, 0)
+	}
 
 	for _, l := range strLens {
 		res, err := brClient.CalculateFor(url+strconv.Itoa(l), cfg.Cycles)
@@ -37,7 +45,7 @@ func main() {
 	}
 }
 
-func GetAllStrSync(url string, cycles int, restrictNumber int) (res []string) {
+func fetchAllStrSync(url string, cycles int, restrictNumber int) (res []string) {
 	res = make([]string, cycles)
 
 	client := http.Client{}
@@ -56,14 +64,13 @@ func GetAllStrSync(url string, cycles int, restrictNumber int) (res []string) {
 	return res
 }
 
-func GetAllStrAsync(url string, cycles int, restrictNumber int) (res []string) {
+func fetchAllStrAsync(url string, cycles int, restrictNumber int) (res []string) {
 	var mutx sync.Mutex
 	res = make([]string, cycles)
 	client := http.Client{}
 	restr := make(chan struct{}, restrictNumber)
 
 	for i := 0; cycles > 0; cycles-- {
-		restr <- struct{}{}
 		go func() {
 			defer func() {
 				<-restr
@@ -81,6 +88,8 @@ func GetAllStrAsync(url string, cycles int, restrictNumber int) (res []string) {
 			mutx.Unlock()
 
 		}()
+
+		restr <- struct{}{}
 	}
 
 	return res
@@ -93,8 +102,8 @@ func getBody(cl http.Client, url string) (string, error) {
 		return "", err
 	}
 
-	if resp.StatusCode != http.StatusAccepted {
-		return "", err
+	if resp.StatusCode != http.StatusOK {
+		return "", errors.New("status not OK")
 	}
 
 	body, errBody := io.ReadAll(resp.Body)
