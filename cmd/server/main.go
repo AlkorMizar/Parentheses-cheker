@@ -3,11 +3,17 @@ package main
 import (
 	"fmt"
 
-	"github.com/AlkorMizar/Parentheses-cheker/pkg/services"
+	conf "github.com/AlkorMizar/Parentheses-cheker"
+	"github.com/AlkorMizar/Parentheses-cheker/internal/services"
 )
 
 func main() {
-	err := services.Run()
+	cfg, err := conf.NewConf()
+	if err != nil {
+		fmt.Print(err)
+		return
+	}
+	err = services.Run(cfg)
 	if err != nil {
 		fmt.Print(err)
 	}

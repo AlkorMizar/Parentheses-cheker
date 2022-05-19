@@ -2,37 +2,24 @@ package services
 
 import (
 	"net/http"
-	"time"
 
+	conf "github.com/AlkorMizar/Parentheses-cheker"
 	"github.com/AlkorMizar/Parentheses-cheker/internal/handlers"
 	"github.com/AlkorMizar/Parentheses-cheker/internal/usecases"
 )
 
-// Route valid path for request
-const Route = "/generate"
-const Port = ":8080"
-
-const (
-	readTimeout  = 30
-	writeTimeout = 90
-	idleTimeout  = 120
-)
-
 // function called to load server
-func Run() error {
+func Run(c *conf.Config) error {
 	mux := http.NewServeMux()
 
 	logic := usecases.NewBraces()
 	h := handlers.NewHandlers(logic)
 
-	mux.Handle(Route, h)
+	mux.Handle(c.Route, h)
 
 	s := http.Server{
-		Addr:         Port,
-		ReadTimeout:  readTimeout * time.Second,
-		WriteTimeout: writeTimeout * time.Second,
-		IdleTimeout:  idleTimeout * time.Second,
-		Handler:      mux,
+		Addr:    c.Port,
+		Handler: mux,
 	}
 
 	err := s.ListenAndServe()

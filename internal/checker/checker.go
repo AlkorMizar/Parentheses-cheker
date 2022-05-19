@@ -38,7 +38,7 @@ func Check(input string) bool {
 		rune('}'): rune('{'),
 	}
 
-	var stack Stack = structs.NewStack()
+	stack := NewStack()
 
 	for _, inpSymb := range input {
 		if mapSymb, ok := bracesMap[inpSymb]; ok {

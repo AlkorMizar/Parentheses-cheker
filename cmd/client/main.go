@@ -4,18 +4,24 @@ import (
 	"fmt"
 	"strconv"
 
+	conf "github.com/AlkorMizar/Parentheses-cheker"
 	"github.com/AlkorMizar/Parentheses-cheker/pkg/client"
-	"github.com/AlkorMizar/Parentheses-cheker/pkg/services"
 )
 
-const N = 1000
-
 var strLens = [...]int{2, 4, 8}
-var url = "http://localhost" + services.Port + services.Route + "?n="
 
 func main() {
+	cfg, err := conf.NewConf()
+
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	url := cfg.Address + cfg.Port + cfg.Route + "?n="
+
 	for _, l := range strLens {
-		res, err := client.CalculateFor(url+strconv.Itoa(l), N)
+		res, err := client.CalculateFor(url+strconv.Itoa(l), cfg.Cycles)
 		if err != nil {
 			fmt.Println(err)
 			continue

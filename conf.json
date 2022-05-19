@@ -1,0 +1,6 @@
+{
+    "port":"8080",
+    "address":"http://localhost",
+    "cycles":1000,
+    "route":"/generate"
+}
