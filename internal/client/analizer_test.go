@@ -3,7 +3,7 @@ package client_test
 import (
 	"testing"
 
-	"github.com/AlkorMizar/Parentheses-cheker/pkg/client"
+	"github.com/AlkorMizar/Parentheses-cheker/internal/client"
 )
 
 func TestCalculate(t *testing.T) {
