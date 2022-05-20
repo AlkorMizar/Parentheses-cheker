@@ -13,7 +13,10 @@ func main() {
 		fmt.Print(err)
 		return
 	}
-	err = services.Run(cfg)
+
+	service := services.NewService(*cfg)
+
+	err = service.Run()
 	if err != nil {
 		fmt.Print(err)
 	}
