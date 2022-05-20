@@ -9,14 +9,16 @@ import (
 	"github.com/AlkorMizar/Parentheses-cheker/internal/checker"
 )
 
+type Type int
+
+const (
+	Sync  Type = 1
+	Async Type = 2
+)
+
 type Client struct {
 	fetchAllStr func(url string, cycles int) []string
 }
-
-type Type int
-
-const Sync Type = 1
-const Async Type = 2
 
 // function called to create client that will use given function to fetch array of strings and then analize given strings
 func NewClient(tp Type, limiteNum int) *Client {
