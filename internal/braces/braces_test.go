@@ -1,10 +1,10 @@
-package usecases_test
+package braces_test
 
 import (
 	"regexp"
 	"testing"
 
-	"github.com/AlkorMizar/Parentheses-cheker/internal/usecases"
+	"github.com/AlkorMizar/Parentheses-cheker/internal/braces"
 )
 
 func TestGenerateResult(t *testing.T) {
@@ -31,7 +31,7 @@ func TestGenerateResult(t *testing.T) {
 	}
 
 	for name, tc := range tests {
-		generator := usecases.NewBraces()
+		generator := braces.NewBraces()
 
 		t.Run(name, func(t *testing.T) {
 			got := generator.Generate(tc.lenIn)
