@@ -14,6 +14,7 @@ type Handlers struct {
 	bracesLogic braces
 }
 
+// function called to create handler with given buisiness logic for creating braces
 func NewHandlers(brL braces) *Handlers {
 	return &Handlers{
 		bracesLogic: brL,

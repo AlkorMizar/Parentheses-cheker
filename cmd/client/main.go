@@ -1,13 +1,9 @@
 package main
 
 import (
-	"errors"
 	"fmt"
-	"io"
-	"net/http"
 	"os"
 	"strconv"
-	"sync"
 
 	conf "github.com/AlkorMizar/Parentheses-cheker"
 	"github.com/AlkorMizar/Parentheses-cheker/internal/client"
@@ -26,10 +22,29 @@ func main() {
 	url := cfg.Address + cfg.Port + cfg.Route + "?n="
 
 	var brClient *client.Client
+
+	if len(os.Args) < 2 {
+		fmt.Println("Client type did not choosen")
+		return
+	}
+
 	if os.Args[1] == "sync" {
-		brClient = client.NewClient(fetchAllStrSync, 0)
+		brClient = client.NewClient(client.Sync, 0)
 	} else {
-		brClient = client.NewClient(fetchAllStrAsync, 0)
+
+		if len(os.Args) < 3 {
+			fmt.Println("No request limitation for async client")
+			return
+		}
+
+		restrictNumber, err := strconv.Atoi(os.Args[2])
+
+		if err != nil {
+			fmt.Println("Incorrect request limitation for async client")
+			return
+		}
+
+		brClient = client.NewClient(client.Async, restrictNumber)
 	}
 
 	for _, l := range strLens {
@@ -43,75 +58,4 @@ func main() {
 
 		fmt.Printf("for length %d percentage = %.0f\n", l, res)
 	}
-}
-
-func fetchAllStrSync(url string, cycles int, restrictNumber int) (res []string) {
-	res = make([]string, cycles)
-
-	client := http.Client{}
-
-	for i := 0; cycles > 0; cycles-- {
-		body, err := getBody(client, url)
-		if err != nil {
-			continue
-		}
-
-		res[i] = body
-		i++
-
-	}
-
-	return res
-}
-
-func fetchAllStrAsync(url string, cycles int, restrictNumber int) (res []string) {
-	var mutx sync.Mutex
-	res = make([]string, cycles)
-	client := http.Client{}
-	restr := make(chan struct{}, restrictNumber)
-
-	for i := 0; cycles > 0; cycles-- {
-		go func() {
-			defer func() {
-				<-restr
-			}()
-			body, err := getBody(client, url)
-			if err != nil {
-				return
-			}
-
-			mutx.Lock()
-
-			res[i] = body
-			i++
-
-			mutx.Unlock()
-
-		}()
-
-		restr <- struct{}{}
-	}
-
-	return res
-}
-
-func getBody(cl http.Client, url string) (string, error) {
-	resp, err := cl.Get(url)
-
-	if err != nil {
-		return "", err
-	}
-
-	if resp.StatusCode != http.StatusOK {
-		return "", errors.New("status not OK")
-	}
-
-	body, errBody := io.ReadAll(resp.Body)
-	defer resp.Body.Close()
-
-	if errBody != nil {
-		return "", err
-	}
-
-	return string(body), nil
 }

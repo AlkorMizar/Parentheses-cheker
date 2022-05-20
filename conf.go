@@ -20,6 +20,7 @@ var (
 	confFile   = filepath.Join(basepath, "conf.json")
 )
 
+// function reads configs
 func NewConf() (*Config, error) {
 	f, err := os.Open(confFile)
 	if err != nil {
