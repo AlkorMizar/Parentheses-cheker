@@ -29,10 +29,13 @@ func NewConf() (*Config, error) {
 	defer f.Close()
 
 	var cfg Config
+
 	decoder := json.NewDecoder(f)
 	err = decoder.Decode(&cfg)
+
 	if err != nil {
 		return nil, err
 	}
+
 	return &cfg, err
 }

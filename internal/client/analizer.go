@@ -21,16 +21,13 @@ const Async Type = 2
 // function called to create client that will use given function to fetch array of strings and then analize given strings
 func NewClient(tp Type, limiteNum int) *Client {
 	var fetcher func(string, int) []string
+
 	switch tp {
 	case Sync:
-		{
-			fetcher = fetchAllStrSync
-		}
+		fetcher = fetchAllStrSync
 	case Async:
-		{
-			fetcher = func(url string, cycles int) []string {
-				return fetchAllStrAsync(url, cycles, limiteNum)
-			}
+		fetcher = func(url string, cycles int) []string {
+			return fetchAllStrAsync(url, cycles, limiteNum)
 		}
 	}
 
@@ -57,27 +54,31 @@ func fetchAllStrSync(url string, cycles int) (res []string) {
 
 		res[i] = body
 		i++
-
 	}
 
 	return res
 }
 
-func fetchAllStrAsync(url string, cycles int, restrictNumber int) (res []string) {
+func fetchAllStrAsync(url string, cycles, restrictNumber int) (res []string) {
 	var mutx sync.Mutex
+
 	var wg sync.WaitGroup
+
 	res = make([]string, cycles)
 	client := http.Client{}
 	restr := make(chan struct{}, restrictNumber)
 
 	for i := 0; cycles > 0; cycles-- {
 		wg.Add(1)
+
 		go func() {
 			defer func() {
 				wg.Done()
 				<-restr
 			}()
+
 			body, err := getBody(client, url)
+
 			if err != nil {
 				return
 			}
@@ -88,12 +89,11 @@ func fetchAllStrAsync(url string, cycles int, restrictNumber int) (res []string)
 			i++
 
 			mutx.Unlock()
-
 		}()
-
 		restr <- struct{}{}
 	}
 	wg.Wait()
+
 	return res
 }
 

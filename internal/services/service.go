@@ -9,7 +9,7 @@ import (
 )
 
 type Service struct {
-	service http.Server
+	service *http.Server
 }
 
 // function called to create service and configure it
@@ -25,14 +25,14 @@ func NewService(c conf.Config) *Service {
 		Addr:    c.Port,
 		Handler: mux,
 	}
+
 	return &Service{
-		service: server,
+		service: &server,
 	}
 }
 
 // function called to run service
 func (s *Service) Run() error {
-
 	err := s.service.ListenAndServe()
 
 	if err != nil {

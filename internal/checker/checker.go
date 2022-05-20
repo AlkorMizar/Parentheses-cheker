@@ -28,7 +28,7 @@ func (s *Stack) Pop() (rune, error) {
 
 const openBrace rune = ' '
 
-// funtion that checks if given string is balnced
+// function that checks if given string is balnced
 func Check(input string) bool {
 	bracesMap := map[rune]rune{
 		rune('('): openBrace,
