@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	conf "github.com/AlkorMizar/Parentheses-cheker"
+	"github.com/AlkorMizar/Parentheses-cheker/internal/conf"
 	"github.com/AlkorMizar/Parentheses-cheker/internal/services"
 )
 

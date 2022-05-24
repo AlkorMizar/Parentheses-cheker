@@ -5,8 +5,8 @@ import (
 	"os"
 	"strconv"
 
-	conf "github.com/AlkorMizar/Parentheses-cheker"
 	"github.com/AlkorMizar/Parentheses-cheker/internal/client"
+	"github.com/AlkorMizar/Parentheses-cheker/internal/conf"
 )
 
 const (

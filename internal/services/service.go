@@ -3,8 +3,8 @@ package services
 import (
 	"net/http"
 
-	conf "github.com/AlkorMizar/Parentheses-cheker"
 	"github.com/AlkorMizar/Parentheses-cheker/internal/braces"
+	"github.com/AlkorMizar/Parentheses-cheker/internal/conf"
 	"github.com/AlkorMizar/Parentheses-cheker/internal/handlers"
 )
 
