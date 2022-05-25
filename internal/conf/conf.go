@@ -2,7 +2,6 @@ package conf
 
 import (
 	"encoding/json"
-	"fmt"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -25,8 +24,6 @@ var (
 func NewConf() (*Config, error) {
 	f, err := os.Open(confFile)
 	if err != nil {
-		fmt.Println(basepath)
-		fmt.Println(confFile)
 		return nil, err
 	}
 	defer f.Close()
