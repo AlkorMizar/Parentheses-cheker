@@ -2,6 +2,7 @@ package conf
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -17,13 +18,15 @@ type Config struct {
 var (
 	_, b, _, _ = runtime.Caller(0)
 	basepath   = filepath.Dir(b)
-	confFile   = filepath.Join(basepath, "conf.json")
+	confFile   = filepath.Join(basepath+"/../../config", "conf.json")
 )
 
 // function reads configs
 func NewConf() (*Config, error) {
 	f, err := os.Open(confFile)
 	if err != nil {
+		fmt.Println(basepath)
+		fmt.Println(confFile)
 		return nil, err
 	}
 	defer f.Close()
