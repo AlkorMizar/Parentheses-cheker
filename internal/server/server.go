@@ -9,10 +9,9 @@ type Server struct {
 }
 
 // function called to create service and configure it
-func NewServer(Addr string, mux *http.ServeMux) *Server {
-
+func NewServer(addr string, mux *http.ServeMux) *Server {
 	server := http.Server{
-		Addr:    Addr,
+		Addr:    addr,
 		Handler: mux,
 	}
 
