@@ -72,6 +72,7 @@ func fetchAllStrAsync(url string, cycles, restrictNumber int) (res []string) {
 
 	for i := 0; cycles > 0; cycles-- {
 		wg.Add(1)
+		restr <- struct{}{}
 
 		go func() {
 			defer func() {
@@ -92,7 +93,6 @@ func fetchAllStrAsync(url string, cycles, restrictNumber int) (res []string) {
 
 			mutx.Unlock()
 		}()
-		restr <- struct{}{}
 	}
 	wg.Wait()
 
