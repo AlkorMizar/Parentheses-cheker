@@ -24,8 +24,6 @@ func main() {
 		return
 	}
 
-	url := cfg.Address + cfg.Port + cfg.Route + "?n="
-
 	var brClient *client.Client
 
 	if len(os.Args) < withSyncArgsLen {
@@ -50,6 +48,8 @@ func main() {
 
 		brClient = client.NewClient(client.Async, restrictNumber)
 	}
+
+	url := "http://" + cfg.Address + cfg.Route + "?n="
 
 	for _, l := range strLens {
 		res, err := brClient.CalculateFor(url+strconv.Itoa(l), cfg.Cycles)

@@ -8,7 +8,6 @@ import (
 )
 
 type Config struct {
-	Port    string `json:"port"`
 	Address string `json:"address"`
 	Cycles  int    `json:"cycles"`
 	Route   string `json:"route"`
