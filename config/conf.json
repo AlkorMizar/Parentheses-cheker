@@ -1,0 +1,5 @@
+{
+    "address":"localhost:8080",
+    "cycles":1000,
+    "route":"/generate"
+}

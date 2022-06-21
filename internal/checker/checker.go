@@ -1,16 +1,34 @@
 package checker
 
-import (
-	"github.com/AlkorMizar/Parentheses-cheker/structs"
-)
+import "errors"
 
-type Stack interface {
-	Push(v rune)
-	Pop() (rune, error)
+type Stack struct {
+	s []rune
+}
+
+func NewStack() *Stack {
+	return &Stack{make([]rune, 0)}
+}
+
+func (s *Stack) Push(v rune) {
+	s.s = append(s.s, v)
+}
+
+func (s *Stack) Pop() (rune, error) {
+	l := len(s.s)
+	if l == 0 {
+		return 0, errors.New("empty stack")
+	}
+
+	res := s.s[l-1]
+	s.s = s.s[:l-1]
+
+	return res, nil
 }
 
 const openBrace rune = ' '
 
+// function that checks if given string is balnced
 func Check(input string) bool {
 	bracesMap := map[rune]rune{
 		rune('('): openBrace,
@@ -21,7 +39,7 @@ func Check(input string) bool {
 		rune('}'): rune('{'),
 	}
 
-	var stack Stack = structs.NewStack()
+	stack := NewStack()
 
 	for _, inpSymb := range input {
 		if mapSymb, ok := bracesMap[inpSymb]; ok {
@@ -33,5 +51,7 @@ func Check(input string) bool {
 		}
 	}
 
-	return true
+	_, err := stack.Pop()
+
+	return err != nil
 }
