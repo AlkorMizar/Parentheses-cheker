@@ -1,8 +1,8 @@
 package main
 
 import (
+	"flag"
 	"fmt"
-	"os"
 	"strconv"
 
 	"github.com/AlkorMizar/Parentheses-cheker/internal/client"
@@ -26,22 +26,16 @@ func main() {
 
 	var brClient *client.Client
 
-	if len(os.Args) < withSyncArgsLen {
-		fmt.Println("Client type did not chosen")
-		return
-	}
+	isSync := *flag.Bool("isSync", true, "true -- sync, false -- async client")
+	restrictNumber := *flag.Int("restrNum", 1, "number of async request activeted through the task")
 
-	if os.Args[1] == "sync" {
+	flag.Parse()
+
+	if isSync {
 		brClient = client.NewClient(client.Sync, 0)
 	} else {
-		if len(os.Args) < withAsymcArgsLen {
-			fmt.Println("No request limitation for async client")
-			return
-		}
 
-		restrictNumber, err := strconv.Atoi(os.Args[2])
-
-		if err != nil {
+		if restrictNumber <= 0 {
 			fmt.Println("Incorrect request limitation for async client")
 			return
 		}
