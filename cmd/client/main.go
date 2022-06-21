@@ -9,11 +9,6 @@ import (
 	"github.com/AlkorMizar/Parentheses-cheker/internal/conf"
 )
 
-const (
-	withSyncArgsLen  = 2
-	withAsymcArgsLen = 3
-)
-
 var strLens = [...]int{2, 4, 8}
 
 func main() {
@@ -26,15 +21,18 @@ func main() {
 
 	var brClient *client.Client
 
-	isSync := *flag.Bool("isSync", true, "true -- sync, false -- async client")
-	restrictNumber := *flag.Int("restrNum", 1, "number of async request activeted through the task")
+	var isSync bool
+
+	var restrictNumber int
+
+	flag.BoolVar(&isSync, "isSync", true, "true -- sync, false -- async client")
+	flag.IntVar(&restrictNumber, "restrNum", 1, "number of async request activeted through the task")
 
 	flag.Parse()
 
 	if isSync {
 		brClient = client.NewClient(client.Sync, 0)
 	} else {
-
 		if restrictNumber <= 0 {
 			fmt.Println("Incorrect request limitation for async client")
 			return
