@@ -11,6 +11,29 @@ import (
 
 var strLens = [...]int{2, 4, 8}
 
+func getType(s string) (client.Type, error) {
+	if s == "sync" {
+		return client.Sync, nil
+	} else if s == "async" {
+		return client.Async, nil
+	}
+
+	return client.Sync, fmt.Errorf(`client type either "sync" or "async" `)
+}
+
+func getRestrNum(s string) (int, error) {
+	restN, err := strconv.Atoi(s)
+	if err != nil {
+		return 1, err
+	}
+
+	if restN < 0 {
+		return 1, fmt.Errorf("restrNum > 0")
+	}
+
+	return restN, err
+}
+
 func main() {
 	cfg, err := conf.NewConf()
 
@@ -21,25 +44,23 @@ func main() {
 
 	var brClient *client.Client
 
-	var isSync bool
+	clType := client.Sync
 
-	var restrictNumber int
+	restrictNumber := 1
 
-	flag.BoolVar(&isSync, "isSync", true, "true -- sync, false -- async client")
-	flag.IntVar(&restrictNumber, "restrNum", 1, "number of async request activeted through the task")
+	flag.Func("type", "sync/async client", func(s string) error {
+		clType, err = getType(s)
+		return err
+	})
+
+	flag.Func("restrNum", "number of async request activeted through the task", func(s string) error {
+		restrictNumber, err = getRestrNum(s)
+		return err
+	})
 
 	flag.Parse()
 
-	if isSync {
-		brClient = client.NewClient(client.Sync, 0)
-	} else {
-		if restrictNumber <= 0 {
-			fmt.Println("Incorrect request limitation for async client")
-			return
-		}
-
-		brClient = client.NewClient(client.Async, restrictNumber)
-	}
+	brClient = client.NewClient(clType, restrictNumber)
 
 	url := "http://" + cfg.Address + cfg.Route + "?n="
 
